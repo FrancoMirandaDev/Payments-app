@@ -1,0 +1,23 @@
+DROP TABLE IF EXISTS payments;
+DROP TABLE IF EXISTS users;
+
+CREATE TABLE Users(
+	user_id SERIAL PRIMARY KEY, 
+  	username VARCHAR (50) UNIQUE NOT NULL, 
+ 	password VARCHAR (100) NOT NULL,
+ 	email VARCHAR (100) UNIQUE NOT NULL,
+	name VARCHAR(100) NOT NULL,
+ 	created_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE Payments(
+	payment_id SERIAL PRIMARY KEY,
+	user_id INT REFERENCES users(user_id),
+	name VARCHAR(100) NOT NULL,
+	amount NUMERIC(100, 2) NOT NULL,
+	date DATE NOT NULL,
+	payment_type VARCHAR(100) NOT NULL,
+	recipient VARCHAR(100) NOT NULL,
+	created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+	CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
