@@ -15,6 +15,21 @@ export const getPaymentsController = async (req, res) => {
     return;
 };
 
+export const getPaymentByIdController = async (req, res) => {
+    const paymentId = req.params.payment_id;
+
+    const payment = await Payment.getPaymentById(paymentId);
+    if (!payment.rows[0]) {
+        res.status(404).json({ error: `El pago con ID ${paymentId} no existe.` });
+        return;
+    }
+
+    payment.rows[0].date = payment.rows[0].date.toISOString().split('T')[0];
+
+    res.status(200).json(payment.rows[0]);
+    return;
+}
+
 export const createPaymentsController = async (req, res) => {
 
     console.log(req.session);

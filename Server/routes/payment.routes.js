@@ -1,9 +1,11 @@
 import { Router } from 'express';
-import { getPaymentsController, createPaymentsController, UpdatePaymentsController, DeletePaymentsController } from '../controllers/payments.controller.js';
+import { getPaymentsController,getPaymentByIdController , createPaymentsController, UpdatePaymentsController, DeletePaymentsController } from '../controllers/payments.controller.js';
 
 const router = Router();
 
 router.get('/payments', getPaymentsController);
+
+router.get('/payments/:payment_id', getPaymentByIdController);
 
 router.post('/payments/register', createPaymentsController);
 

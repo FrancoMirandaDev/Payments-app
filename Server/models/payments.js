@@ -54,10 +54,11 @@ class Payment{
     static async updatePayment(paymentId, updatedPayment) {
         const query = `
             UPDATE Payments
-            SET amount = $1, date = $2, payment_type = $3, recipient = $4
-            WHERE payment_id = $5;
+            SET name = $1, amount = $2, date = $3, payment_type = $4, recipient = $5
+            WHERE payment_id = $6;
         `;
         const values = [
+            updatedPayment.name,
             updatedPayment.amount,
             updatedPayment.date,
             updatedPayment.payment_type,
