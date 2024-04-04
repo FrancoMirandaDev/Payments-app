@@ -6,6 +6,7 @@ import { CSVLink } from 'react-csv';
 
 const PaymentPage = () => {
     const [payments, setPayments] = useState([]);
+    const [search, setSearch] = useState('');
 
     const csvData = [
         ['Name', 'Amount', 'Date', 'Payment Type', 'Recipient'],
@@ -38,11 +39,24 @@ const PaymentPage = () => {
                 console.error(error);
             });
     };
-    
+
+    const filteredPayments = payments.filter(payment => 
+        payment.name.toLowerCase().includes(search.toLowerCase())
+    );
+
     return (
         <div className="flex flex-col items-center justify-center h-screen p-5">
             <h1 className="text-3xl font-bold mb-4 ">Payments:</h1>
             <a href="/payments/create" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">Create Payment</a>
+
+            <input
+                type="text"
+                placeholder="Search name..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="border border-gray-300 rounded-md px-4 py-2 mb-2 mt-6"
+            />
+            
 
             {// payments.length != 0 &&
             <CSVLink data={csvData} className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-4 ml-auto">Export to CSV</CSVLink>
@@ -60,7 +74,7 @@ const PaymentPage = () => {
                     </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-x  divide-gray-950">
-                    {payments.map((payment) => (
+                    {filteredPayments.map((payment) => (
                         <tr key={payment.payment_id}>
                             <td className="px-6 py-4 whitespace-nowrap">{payment.name}</td>
                             <td className="px-6 py-4 whitespace-nowrap">$ {payment.amount}</td>
