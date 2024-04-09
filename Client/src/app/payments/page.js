@@ -6,7 +6,12 @@ import { CSVLink } from 'react-csv';
 
 const PaymentPage = () => {
     const [payments, setPayments] = useState([]);
-    const [search, setSearch] = useState('');
+    const [filters, setFilters] = useState({
+        search: '',
+        date: { from: '', to: '' },
+        amount: '',
+        payment_type: ''
+    });
 
     const csvData = [
         ['Name', 'Amount', 'Date', 'Payment Type', 'Recipient'],
@@ -40,9 +45,28 @@ const PaymentPage = () => {
             });
     };
 
-    const filteredPayments = payments.filter(payment => 
-        payment.name.toLowerCase().includes(search.toLowerCase())
-    );
+    const applyFilters = (payment) => {
+        return (
+            payment.name.toLowerCase().includes(filters.search.toLowerCase()) &&
+            (
+                (filters.date.from === '' && filters.date.to === '') ||
+                (payment.date >= filters.date.from && payment.date <= filters.date.to)
+            ) &&
+            (filters.amount === '' || parseFloat(payment.amount) === parseFloat(filters.amount)) &&
+            (filters.payment_type === '' || payment.payment_type.toLowerCase().includes(filters.payment_type.toLowerCase()))
+        );
+    };
+
+    const filteredPayments = payments.filter(applyFilters);
+
+    const handleFilterChange = (filterKey, value) => {
+        setFilters({
+            ...filters,
+            [filterKey]: value
+        });
+    };
+
+
 
     return (
         <div className="flex flex-col items-center justify-center h-screen p-5">
@@ -52,11 +76,49 @@ const PaymentPage = () => {
             <input
                 type="text"
                 placeholder="Search name..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                value={filters.search}
+                onChange={(e) => handleFilterChange('search', e.target.value)}
                 className="border border-gray-300 rounded-md px-4 py-2 mb-2 mt-6"
             />
             
+            <div className="flex space-x-4 mb-2 mt-2">
+                <div>
+                    <label>Date From:</label>
+                    <input
+                        type="date"
+                        value={filters.date.from}
+                        onChange={(e) => handleFilterChange('date', {...filters.date, from: e.target.value})}
+                        className="border border-gray-300 rounded-md px-2 py-1"
+                    />
+                </div>
+                <div>
+                    <label>Date To:</label>
+                    <input
+                        type="date"
+                        value={filters.date.to }
+                        onChange={(e) => handleFilterChange('date', {...filters.date, to: e.target.value})}
+                        className="border border-gray-300 rounded-md px-2 py-1"
+                    />
+                </div>
+                <div>
+                    <label>Amount:</label>
+                    <input
+                        type="number"
+                        value={filters.amount }
+                        onChange={(e) => handleFilterChange('amount', e.target.value)}
+                        className="border border-gray-300 rounded-md px-2 py-1"
+                    />
+                </div>
+                <div>
+                    <label>Payment Type:</label>
+                    <input
+                        type="text"
+                        value={filters.payment_type }
+                        onChange={(e) => handleFilterChange('payment_type', e.target.value)}
+                        className="border border-gray-300 rounded-md px-2 py-1"
+                    />
+                </div>
+            </div>
 
             {// payments.length != 0 &&
             <CSVLink data={csvData} className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-4 ml-auto">Export to CSV</CSVLink>
