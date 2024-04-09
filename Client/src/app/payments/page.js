@@ -104,6 +104,7 @@ const PaymentPage = () => {
                     <label>Amount:</label>
                     <input
                         type="number"
+                        placeholder='0.00'
                         value={filters.amount }
                         onChange={(e) => handleFilterChange('amount', e.target.value)}
                         className="border border-gray-300 rounded-md px-2 py-1"
@@ -113,6 +114,7 @@ const PaymentPage = () => {
                     <label>Payment Type:</label>
                     <input
                         type="text"
+                        placeholder='Efectivo, Tarjeta, Transferencia...'
                         value={filters.payment_type }
                         onChange={(e) => handleFilterChange('payment_type', e.target.value)}
                         className="border border-gray-300 rounded-md px-2 py-1"
